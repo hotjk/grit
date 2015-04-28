@@ -20,10 +20,6 @@ namespace Grit.Pattern.FSM
 
             public StateConfiguration Permit(TTrigger trigger, TState destinationState)
             {
-                if(_representation.State.Equals(destinationState))
-                {
-                    throw new ArgumentException("The destination state MUST not equal to the source state.");
-                }
                 _representation.AddTriggerState(trigger, destinationState);
                 return this;
             }
