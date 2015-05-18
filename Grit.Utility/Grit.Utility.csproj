@@ -35,6 +35,7 @@
       <HintPath>..\packages\MySql.Data.6.9.5\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -45,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\CookieTicket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Authentication\CookieTicketConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Authentication\ICookieTicketConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Security\EncryptSignManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Basic\Diagnostics.cs" />
     <Compile Include="Captcha\CaptchaImage.cs" />
     <Compile Include="CommonHelper.cs" />
@@ -56,6 +69,9 @@
     <Compile Include="Security\RijndaelManager.cs" />
     <Compile Include="Security\RSAManager.cs" />
     <Compile Include="Security\RSAPrivateEncryption.cs" />
+    <Compile Include="Security\StringExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Singleton.cs" />
     <Compile Include="Sql\DataReaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +86,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
