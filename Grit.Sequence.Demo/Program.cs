@@ -12,20 +12,24 @@ namespace Grit.Sequence.Demo
 {
     class Program
     {
+        public static readonly string Sequence = "Server=localhost;Port=3306;Database=grit;Uid=root;Pwd=flowers;";
+        
         private const int SequenceID = 1;
         public static IKernel Kernel;
         static void Main(string[] args)
         {
             AddIocBindings();
 
-            BasicTest();
-            //MultiThreadTest();
+            //BasicTest();
+            MultiThreadTest();
             //TransactionScopeTest();
         }
 
         private static void AddIocBindings()
         {
             Kernel = new StandardKernel();
+            SqlOption sqlOption = new SqlOption { ConnectionString = Sequence };
+            Kernel.Bind<SqlOption>().ToConstant(sqlOption);
             Kernel.Bind<ISequenceRepository>().To<SequenceRepository>().InSingletonScope();
             Kernel.Bind<ISequenceService>().To<SequenceService>().InSingletonScope();
         }
@@ -48,8 +52,8 @@ namespace Grit.Sequence.Demo
             ISequenceService sequenceService = Kernel.Get<ISequenceService>();
             for (int i = 0; i < 100; i++)
             {
-                int next = sequenceService.Next(SequenceID, 10);
-                Console.Write(string.Format("{0}-{1}, ", Thread.CurrentThread.Name,next));
+                int next = sequenceService.Next(SequenceID, 100);
+                Console.Write(string.Format("{0}-{1}, ", Thread.CurrentThread.ManagedThreadId,next));
             }
         }
 
