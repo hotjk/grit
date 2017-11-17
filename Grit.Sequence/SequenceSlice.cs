@@ -10,27 +10,21 @@ namespace Grit.Sequence
     {
         public SequenceSlice(int from, int to)
         {
-            if(to < from)
+            if(to <= from)
             {
                 throw new ArgumentException("Invalid sequence slice.");
             }
             this.From = from;
             this.To = to;
+            this.Middle = (To - From) / 2 + From;
         }
         public int From { get; private set; }
         public int To { get; private set; }
-
-        public int Middle
-        {
-            get
-            {
-                return (To - From) / 2 + From;
-            }
-        }
+        public int Middle { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("From: {0}, To: {1}", From, To);
+            return string.Format("[{0}..{1}..{2})", From, Middle, To);
         }
     }
 }

@@ -13,14 +13,12 @@ namespace Grit.Sequence
         {
             this.Id = id;
             this.Current = 0;
-            this.Last = 0;
 
             Slices = new Queue<SequenceSlice>();
         }
 
         public int Id { get; private set; }
         public int Current { get; private set; }
-        public int Last { get; set; }
 
         public Queue<SequenceSlice> Slices { get; private set; }
 
@@ -40,12 +38,10 @@ namespace Grit.Sequence
                 }
 
                 slice = Slices.First();
-                Console.WriteLine("Current: {0}, Middle: {1}", Current, slice.Middle);
                 if (Current == slice.Middle)
                 {
                     Task.Run(() =>
                     {
-                        Console.Write("Loading...");
                         Loading(step, repository);
                     });
                 }
@@ -53,7 +49,6 @@ namespace Grit.Sequence
 
                 if(Current == slice.To)
                 {
-                    Console.Write("Dequeue...");
                     lock(LockSlice)
                     {
                         Slices.Dequeue();
@@ -75,7 +70,19 @@ namespace Grit.Sequence
             lock (LockSlice)
             {
                 Slices.Enqueue(new SequenceSlice(from, from + step));
+                //Console.WriteLine(this);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{2}## Sequence: {0}, {1}", this.Id, this.Current, Environment.NewLine);
+            foreach(var slice in this.Slices)
+            {
+                sb.AppendFormat(", {0}", slice);
+            }
+            return sb.ToString();
         }
     }
 }

@@ -17,8 +17,8 @@ namespace Grit.Sequence
         public static readonly int MIN_STEP = 1;
         public static readonly int MAX_STEP = 100000;
 
-        private static object LockObject = new object();
-        private static IDictionary<int, SequenceRange> cache = new Dictionary<int, SequenceRange>();
+        private object LockObject = new object();
+        private IDictionary<int, SequenceRange> cache = new Dictionary<int, SequenceRange>();
         private ISequenceRepository SequenceRepository { get; set; }
 
         public int Next(int sequence, int step = 1)
