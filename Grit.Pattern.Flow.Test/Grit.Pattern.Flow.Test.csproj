@@ -54,12 +54,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web\code.js" />
-    <Content Include="Web\cytoscape-dagre.js" />
-    <Content Include="Web\cytoscape.min.js" />
-    <Content Include="Web\dagre.min.js" />
-    <Content Include="Web\demo.html" />
-    <Content Include="Web\style.css" />
+    <Content Include="Web\code.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\cytoscape-dagre.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\cytoscape.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\dagre.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\demo.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

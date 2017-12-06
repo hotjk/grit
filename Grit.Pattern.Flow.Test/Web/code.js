@@ -41,13 +41,6 @@ var cy = cytoscape({
 	  
 	  
 
-elements: {
-nodes: [
-{ data: { id: 'Part2_1' } },{ data: { id: 'Part2_2' } },{ data: { id: 'Part2_3' } },{ data: { id: 'Part1' } },{ data: { id: 'Part4' } },{ data: { id: 'Part3_1' } },{ data: { id: 'Part3_2' } },{ data: { id: 'Part5' } },{ data: { id: 'Part3_3' } }
-],
-edges: [
-{ data: { source: 'Part1', target: 'Part2_1', faveColor: '#8EADDA' } },{ data: { source: 'Part1', target: 'Part2_2', faveColor: '#3BE8FC' } },{ data: { source: 'Part1', target: 'Part2_3', faveColor: '#C2A106' } },,{ data: { source: 'Part3_1', target: 'Part4', faveColor: '#6B2994' } },{ data: { source: 'Part3_2', target: 'Part4', faveColor: '#6B2994' } },,{ data: { source: 'Part4', target: 'Part5', faveColor: '#8C8A29' } },,{ data: { source: 'Part3_2', target: 'Part4', faveColor: '#985661' } },{ data: { source: 'Part3_3', target: 'Part4', faveColor: '#985661' } },,{ data: { source: 'Part2_1', target: 'Part3_1', faveColor: '#5F3DF8' } },{ data: { source: 'Part2_2', target: 'Part3_1', faveColor: '#5F3DF8' } },{ data: { source: 'Part2_3', target: 'Part3_1', faveColor: '#5F3DF8' } },{ data: { source: 'Part2_1', target: 'Part3_2', faveColor: '#927AB1' } },{ data: { source: 'Part2_2', target: 'Part3_2', faveColor: '#927AB1' } },{ data: { source: 'Part2_3', target: 'Part3_2', faveColor: '#927AB1' } },{ data: { source: 'Part2_1', target: 'Part3_3', faveColor: '#494BCF' } },{ data: { source: 'Part2_2', target: 'Part3_3', faveColor: '#494BCF' } },{ data: { source: 'Part2_3', target: 'Part3_3', faveColor: '#494BCF' } },,{ data: { source: 'Part3_1', target: 'Part4', faveColor: '#6C1543' } },{ data: { source: 'Part3_3', target: 'Part4', faveColor: '#6C1543' } },
-]
-}
+<@elements>
 
 });

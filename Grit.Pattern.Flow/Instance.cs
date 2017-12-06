@@ -58,6 +58,10 @@ namespace Grit.Pattern.Flow
         public void Completed()
         {
             var roots = nodes.Where(node => !nodes.Any(x => x.Target.Any(n => n.Key.Equals(node.Key))));
+            if(!roots.Any())
+            {
+                throw new ApplicationException("There is not root node in the flow.");
+            }
             foreach (var node in roots)
             {
                 CalculateWeight(node);
