@@ -44,12 +44,9 @@ namespace Grit.Pattern.Flow
                 Append(buildTransition.When, states);
                 buildState = BuildState.When;
             }
-            else if (buildState == BuildState.When) // add more When
+            else if (buildState == BuildState.When)
             {
-                foreach (var state in states)
-                {
-                    buildTransition.When.Add(state);
-                }
+                throw new ApplicationException("Add WHEN for instance with invalid state.");
             }
             else if (buildState == BuildState.WhenAndThen) // close a transition and start a new transition
             {
@@ -83,16 +80,13 @@ namespace Grit.Pattern.Flow
                 Append(buildTransition.Then, states);
                 buildState = BuildState.WhenAndThen;
             }
-            else if (buildState == BuildState.WhenAndThen) // add more Then
+            else if (buildState == BuildState.WhenAndThen)
             {
-                foreach (var state in states)
-                {
-                    buildTransition.Then.Add(state);
-                }
+                throw new ApplicationException("Add THEN for instance with invalid state.");
             }
             else
             {
-                throw new ApplicationException("Add WHEN for completed instance.");
+                throw new ApplicationException("Add THEN for completed instance.");
             }
             return this;
         }
