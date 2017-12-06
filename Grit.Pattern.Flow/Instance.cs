@@ -100,20 +100,22 @@ namespace Grit.Pattern.Flow
 
         public string CytoscapeJs()
         {
+            Random random = new Random();
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("elements: {");
             sb.AppendLine("nodes: [");
-            sb.AppendLine(string.Join(",", nodes.Select(x=>string.Format("{{ data: {{ id: '{0}' }} }}", x.Key))));
+            sb.AppendLine(string.Join(",", nodes.Select(x => string.Format("{{ data: {{ id: '{0}' }} }}", x.Key))));
             sb.AppendLine("],");
             sb.AppendLine("edges: [");
             sb.AppendLine(string.Join(",", transitions.Select(x =>
             {
                 StringBuilder buffer = new StringBuilder();
-                foreach (var when in x.When)
+                foreach (var then in x.Then)
                 {
-                    foreach (var then in x.Then)
+                    var color = random.Next(0x1000000);
+                    foreach (var when in x.When)
                     {
-                        buffer.AppendFormat("{{ data: {{ id: '{0}_{1}', source: '{0}', target: '{1}' }} }},", when, then);
+                        buffer.AppendFormat("{{ data: {{ source: '{0}', target: '{1}', faveColor: '{2}' }} }},", when, then, String.Format("#{0:X6}", color));
                     }
                 }
                 return buffer.ToString();
