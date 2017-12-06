@@ -54,7 +54,7 @@ namespace Grit.Pattern.Flow
             else if (buildState == BuildState.WhenAndThen) // close a transition and start a new transition
             {
                 buildTransition.Assert();
-                instance.Add(buildTransition);
+                instance.AddTransition(buildTransition);
 
                 buildTransition = new Transition();
                 Append(buildTransition.When, states);
@@ -115,13 +115,16 @@ namespace Grit.Pattern.Flow
             else if (buildState == BuildState.WhenAndThen)
             {
                 buildTransition.Assert();
-                instance.Add(buildTransition);
+                instance.AddTransition(buildTransition);
                 buildState = BuildState.Completed;
             }
             else
             {
                 throw new ApplicationException("Instance already completed.");
             }
+
+            instance.Completed();
+
             instance.Assert();
             return instance;
         }
