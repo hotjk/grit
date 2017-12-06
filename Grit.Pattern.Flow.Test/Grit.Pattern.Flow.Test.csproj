@@ -53,6 +53,12 @@
       <Name>Grit.Pattern.Flow</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web\code.js" />
+    <Content Include="Web\dagre.min.js" />
+    <Content Include="Web\demo.html" />
+    <Content Include="Web\style.css" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

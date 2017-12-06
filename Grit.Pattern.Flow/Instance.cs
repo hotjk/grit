@@ -35,7 +35,6 @@ namespace Grit.Pattern.Flow
             return nodes.FirstOrDefault(x => x.Key.Equals(key));
         }
 
-
         public void AddTransition(Transition transition)
         {
             transitions.Add(transition);
@@ -99,6 +98,30 @@ namespace Grit.Pattern.Flow
             return result.Where(x => GetNode(x).Weight == max).Distinct().ToList();
         }
 
+        public string CytoscapeJs()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("elements: {");
+            sb.AppendLine("nodes: [");
+            sb.AppendLine(string.Join(",", nodes.Select(x=>string.Format("{{ data: {{ id: '{0}' }} }}", x.Key))));
+            sb.AppendLine("],");
+            sb.AppendLine("edges: [");
+            sb.AppendLine(string.Join(",", transitions.Select(x =>
+            {
+                StringBuilder buffer = new StringBuilder();
+                foreach (var when in x.When)
+                {
+                    foreach (var then in x.Then)
+                    {
+                        buffer.AppendFormat("{{ data: {{ id: '{0}_{1}', source: '{0}', target: '{1}' }} }},", when, then);
+                    }
+                }
+                return buffer.ToString();
+            })));
+            sb.AppendLine("]");
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
         public void Assert()
         {
             // todo: find duplicate transition/cycle...

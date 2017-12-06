@@ -35,6 +35,8 @@ namespace Grit.Pattern.Flow.Test
 
             var target = instance.Next(Steps.Part1, Steps.Part2_1, Steps.Part2_2, Steps.Part2_3, Steps.Part3_2, Steps.Part3_3);
             Console.WriteLine(string.Join(", ", target));
+
+            Console.WriteLine(instance.CytoscapeJs());
         }
     }
 }
