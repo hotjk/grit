@@ -20,10 +20,10 @@ namespace Grit.Pattern.Flow
         private Transition buildTransition;
         private Instance instance;
 
-        public static Builder Start()
+        public static Builder Start(string name)
         {
             Builder builder = new Builder();
-            builder.instance = new Instance();
+            builder.instance = new Instance(name);
             builder.buildState = BuildState.Start;
             return builder;
         }

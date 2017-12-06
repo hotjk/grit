@@ -23,7 +23,7 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Builder.Start()
+            var instance = Builder.Start("Demo")
                 .When(Steps.Part1).Then(Steps.Part2_1, Steps.Part2_2, Steps.Part2_3)
                 .When(Steps.Part3_1, Steps.Part3_2).Then(Steps.Part4)
                 .When(Steps.Part4).Then(Steps.Part5)
@@ -32,6 +32,9 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part3_1, Steps.Part3_3).Then(Steps.Part4)
                 .Complete();
             Console.WriteLine(instance);
+
+            var target = instance.Next(Steps.Part1, Steps.Part2_1, Steps.Part2_2, Steps.Part2_3, Steps.Part3_2, Steps.Part3_3);
+            Console.WriteLine(string.Join(", ", target));
         }
     }
 }

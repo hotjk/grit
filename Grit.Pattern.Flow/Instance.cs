@@ -8,18 +8,20 @@ namespace Grit.Pattern.Flow
 {
     public class Instance
     {
-        public Instance()
+        public Instance(string name)
         {
+            Name = name;
             transitions = new List<Transition>();
             nodes = new List<Node>();
         }
 
         private IList<Transition> transitions;
         private IList<Node> nodes;
+        public string Name { get; private set; }
 
-        private Node SetAndGet(object key)
+        private Node SetNode(object key)
         {
-            var node = nodes.FirstOrDefault(x=>x.Key.Equals(key));
+            var node = nodes.FirstOrDefault(x => x.Key.Equals(key));
             if (node == null)
             {
                 node = new Node(key);
@@ -28,21 +30,27 @@ namespace Grit.Pattern.Flow
             return node;
         }
 
+        private Node GetNode(object key)
+        {
+            return nodes.FirstOrDefault(x => x.Key.Equals(key));
+        }
+
+
         public void AddTransition(Transition transition)
         {
             transitions.Add(transition);
 
             foreach (var then in transition.Then)
             {
-                SetAndGet(then);
+                SetNode(then);
             }
 
-            foreach(var when in transition.When)
+            foreach (var when in transition.When)
             {
-                var nodeWhen = SetAndGet(when);
+                var nodeWhen = SetNode(when);
                 foreach (var then in transition.Then)
                 {
-                    var nodeThen = SetAndGet(then);
+                    var nodeThen = SetNode(then);
                     nodeWhen.TryAdd(nodeThen);
                 }
             }
@@ -50,8 +58,8 @@ namespace Grit.Pattern.Flow
 
         public void Completed()
         {
-            var roots = nodes.Where(node => !nodes.Any(x => x.Next.Any(n => n.Key.Equals(node.Key))));
-            foreach(var node in roots)
+            var roots = nodes.Where(node => !nodes.Any(x => x.Target.Any(n => n.Key.Equals(node.Key))));
+            foreach (var node in roots)
             {
                 CalculateWeight(node);
             }
@@ -59,11 +67,36 @@ namespace Grit.Pattern.Flow
 
         private void CalculateWeight(Node node)
         {
-            foreach(var next in node.Next)
+            foreach (var next in node.Target)
             {
                 next.Weight = next.Weight + node.Weight + 1;
+                if (next.Weight > 100000)
+                {
+                    throw new ApplicationException("There may be loops in the flow.");
+                }
                 CalculateWeight(next);
             }
+        }
+
+        public IList<object> Next(params object[] source)
+        {
+            return Next(source.AsEnumerable());
+        }
+        public IList<object> Next(IEnumerable<object> source)
+        {
+            IList<object> result = new List<object>();
+            foreach (var tran in transitions)
+            {
+                if (tran.When.All(x => source.Any(n => n.Equals(x))))
+                {
+                    foreach (var then in tran.Then)
+                    {
+                        result.Add(then);
+                    }
+                }
+            }
+            int max = result.Max(x => GetNode(x).Weight);
+            return result.Where(x => GetNode(x).Weight == max).Distinct().ToList();
         }
 
         public void Assert()
@@ -74,11 +107,12 @@ namespace Grit.Pattern.Flow
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach(var trans in transitions)
+            sb.AppendLine(Name);
+            foreach (var trans in transitions)
             {
                 sb.AppendLine(trans.ToString());
             }
-
+            sb.AppendLine();
             foreach (var node in nodes)
             {
                 sb.AppendLine(node.ToString());
