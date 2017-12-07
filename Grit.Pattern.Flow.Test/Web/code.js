@@ -14,9 +14,9 @@ var cy = cytoscape({
         'content': 'data(id)',
         'text-valign': 'center',
         'color': 'white',
-        'text-outline-width': 2,
-        'background-color': '#999',
-        'text-outline-color': '#999'
+        'text-outline-width': 1,
+        'background-color': '#fff',
+        'text-outline-color': '#000'
       })
     .selector('edge')
       .css({

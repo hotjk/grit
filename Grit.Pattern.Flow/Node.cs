@@ -10,12 +10,12 @@ namespace Grit.Pattern.Flow
     {
         public object Key { get; set; }
         public int Weight { get; set; }
-        public IList<Node> Target { get; set; }
+        public ISet<Node> Target { get; set; }
 
         public Node(object key)
         {
             Key = key;
-            this.Target = new List<Node>();
+            this.Target = new HashSet<Node>();
         }
 
         public void TryAdd(Node node)
@@ -26,7 +26,12 @@ namespace Grit.Pattern.Flow
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}]: {2}", Key, Weight, string.Join(", ", Target.Select(x => x.Key)));
+            return string.Format("{0}({1}) -> [{2}]", Key, Weight, string.Join(", ", Target.Select(x => x.Key)));
+        }
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
         }
     }
 }

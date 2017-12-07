@@ -12,27 +12,22 @@ namespace Grit.Pattern.Flow
         {
             Name = name;
             transitions = new List<Transition>();
-            nodes = new List<Node>();
+            nodes = new Dictionary<object, Node>();
         }
 
-        private IList<Transition> transitions;
-        private IList<Node> nodes;
         public string Name { get; private set; }
+        private IList<Transition> transitions;
+        private IDictionary<object, Node> nodes;
 
         private Node SetNode(object key)
         {
-            var node = nodes.FirstOrDefault(x => x.Key.Equals(key));
-            if (node == null)
+            Node node = null;
+            if(!nodes.TryGetValue(key, out node))
             {
                 node = new Node(key);
-                nodes.Add(node);
+                nodes[key] = node;
             }
             return node;
-        }
-
-        private Node GetNode(object key)
-        {
-            return nodes.FirstOrDefault(x => x.Key.Equals(key));
         }
 
         public void AddTransition(Transition transition)
@@ -57,7 +52,7 @@ namespace Grit.Pattern.Flow
 
         public void Completed()
         {
-            var roots = nodes.Where(node => !nodes.Any(x => x.Target.Any(n => n.Key.Equals(node.Key))));
+            var roots = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node)));
             if(!roots.Any())
             {
                 throw new ApplicationException("There is not root node in the flow.");
@@ -98,8 +93,8 @@ namespace Grit.Pattern.Flow
                     }
                 }
             }
-            int max = result.Max(x => GetNode(x).Weight);
-            return result.Where(x => GetNode(x).Weight == max).Distinct().ToList();
+            int max = result.Max(x => nodes[x].Weight);
+            return result.Where(x => nodes[x].Weight == max).Distinct().ToList();
         }
 
         public string CytoscapeJs()
@@ -128,10 +123,6 @@ namespace Grit.Pattern.Flow
             sb.AppendLine("}");
             return sb.ToString();
         }
-        public void Assert()
-        {
-            // todo: find duplicate transition/cycle...
-        }
 
         public override string ToString()
         {
@@ -142,7 +133,7 @@ namespace Grit.Pattern.Flow
                 sb.AppendLine(trans.ToString());
             }
             sb.AppendLine();
-            foreach (var node in nodes)
+            foreach (var node in nodes.Values.OrderBy(x=>x.Weight))
             {
                 sb.AppendLine(node.ToString());
             }

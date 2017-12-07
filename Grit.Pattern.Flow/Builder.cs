@@ -119,7 +119,6 @@ namespace Grit.Pattern.Flow
 
             instance.Completed();
 
-            instance.Assert();
             return instance;
         }
     }

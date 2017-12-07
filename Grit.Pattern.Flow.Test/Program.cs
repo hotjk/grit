@@ -13,34 +13,41 @@ namespace Grit.Pattern.Flow.Test
         public enum Steps
         {
             Part1,
-            Part2_1,
-            Part2_2,
-            Part2_3,
-            Part3_1,
-            Part3_2,
-            Part3_3,
+            Part2,
+            Part3,
             Part4,
-            Part5
+            Part5,
+            Part6,
+            Part7,
+            Part8,
+            Part9
         }
         static void Main(string[] args)
         {
-            var instance = Builder.Start("Demo")
-                .When(Steps.Part1).Then(Steps.Part2_1, Steps.Part2_2, Steps.Part2_3)
-                .When(Steps.Part3_1, Steps.Part3_2).Then(Steps.Part4)
-                .When(Steps.Part4).Then(Steps.Part5)
-                .When(Steps.Part3_2, Steps.Part3_3).Then(Steps.Part4)
-                .When(Steps.Part2_1, Steps.Part2_2, Steps.Part2_3).Then(Steps.Part3_1, Steps.Part3_2, Steps.Part3_3)
-                .When(Steps.Part3_1, Steps.Part3_3).Then(Steps.Part4)
-                .Complete();
-            Console.WriteLine(instance);
-
-            var target = instance.Next(Steps.Part1, Steps.Part2_1, Steps.Part2_2, Steps.Part2_3, Steps.Part3_2, Steps.Part3_3);
-            Console.WriteLine(string.Join(", ", target));
+            var instance = Test1();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);
             File.WriteAllText(file, html.Replace("<@elements>", instance.CytoscapeJs()));
             System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
         }
+
+        private static Instance Test1()
+        {
+            var instance = Builder.Start("Demo")
+                .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
+                .When(Steps.Part5, Steps.Part6).Then(Steps.Part8)
+                .When(Steps.Part8).Then(Steps.Part9)
+                .When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
+                .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
+                .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
+                .Complete();
+            Console.WriteLine(instance);
+
+            var target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3, Steps.Part4, Steps.Part6, Steps.Part7);
+            Console.WriteLine(string.Join(", ", target));
+            return instance;
+        }
+
     }
 }
