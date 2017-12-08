@@ -34,7 +34,7 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test3();
+            var instance = Test1();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);

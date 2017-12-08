@@ -44,8 +44,7 @@ namespace Grit.Pattern.Flow
                 var nodeWhen = SetNode(when);
                 foreach (var then in transition.Then)
                 {
-                    var nodeThen = SetNode(then);
-                    nodeWhen.TryAdd(nodeThen);
+                    nodeWhen.TryAdd(SetNode(then));
                 }
             }
         }
@@ -80,25 +79,16 @@ namespace Grit.Pattern.Flow
         {
             return Next(source.AsEnumerable());
         }
+
         public IList<object> Next(IEnumerable<object> source)
         {
-            IList<object> result = new List<object>();
-            foreach (var tran in transitions)
+            var result = transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
+            if (result.Any()) 
             {
-                if (tran.When.All(x => source.Any(n => n.Equals(x))))
-                {
-                    foreach (var then in tran.Then)
-                    {
-                        result.Add(then);
-                    }
-                }
+                int max = result.Max(x => nodes[x].Weight);
+                result = result.Where(x => nodes[x].Weight == max);    
             }
-            if (result.Count == 0)
-            {
-                return result;
-            }
-            int max = result.Max(x => nodes[x].Weight);
-            return result.Where(x => nodes[x].Weight == max).Distinct().ToList();
+            return result.ToList();
         }
 
         public string CytoscapeJs()
