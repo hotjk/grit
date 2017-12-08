@@ -22,9 +22,19 @@ namespace Grit.Pattern.Flow.Test
             Part8,
             Part9
         }
+
+        public enum Symbol
+        {
+            A,
+            B,
+            C,
+            D,
+            E,
+            F
+        }
         static void Main(string[] args)
         {
-            var instance = Test1();
+            var instance = Test3();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);
@@ -48,6 +58,33 @@ namespace Grit.Pattern.Flow.Test
             Console.WriteLine(string.Join(", ", target));
             return instance;
         }
+        private static Instance Test2()
+        {
+            var instance = Builder.Start("Demo")
+                .When(Symbol.A).Then(Symbol.B)
+                .When(Symbol.A, Symbol.B).Then(Symbol.C)
+                .When(Symbol.A, Symbol.B, Symbol.C).Then(Symbol.D)
+                .When(Symbol.B, Symbol.C, Symbol.D).Then(Symbol.E, Symbol.F)
+                .Complete();
+            Console.WriteLine(instance);
 
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.A)));
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B, Symbol.C)));
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B, Symbol.C, Symbol.D)));
+            return instance;
+        }
+        private static Instance Test3()
+        {
+            var instance = Builder.Start("Demo")
+                .When(Symbol.A).Then(Symbol.B)
+                .When(Symbol.A, Symbol.B).Then(Symbol.C)
+                .Complete();
+            Console.WriteLine(instance);
+
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.A)));
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B)));
+            Console.WriteLine(string.Join(", ", instance.Next(Symbol.B)));
+            return instance;
+        }
     }
 }

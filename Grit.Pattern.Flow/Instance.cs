@@ -93,6 +93,10 @@ namespace Grit.Pattern.Flow
                     }
                 }
             }
+            if (result.Count == 0)
+            {
+                return result;
+            }
             int max = result.Max(x => nodes[x].Weight);
             return result.Where(x => nodes[x].Weight == max).Distinct().ToList();
         }
