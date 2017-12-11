@@ -44,6 +44,7 @@ namespace Grit.Pattern.Flow.Test
 
         private static Instance Test1()
         {
+            Builder.Start().Complete
             var instance = Builder.Start("Demo")
                 .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
                 .When(Steps.Part5, Steps.Part6).Then(Steps.Part8)
