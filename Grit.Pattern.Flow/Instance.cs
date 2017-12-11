@@ -18,6 +18,7 @@ namespace Grit.Pattern.Flow
         public string Name { get; private set; }
         private IList<Transition> transitions;
         private IDictionary<object, Node> nodes;
+        private IList<Node> root;
 
         private Node SetNode(object key)
         {
@@ -51,12 +52,12 @@ namespace Grit.Pattern.Flow
 
         public void Completed()
         {
-            var roots = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node)));
-            if(!roots.Any())
+            root = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node))).ToList();
+            if (!root.Any())
             {
                 throw new ApplicationException("There is not root node in the flow.");
             }
-            foreach (var node in roots)
+            foreach (var node in root)
             {
                 CalculateWeight(node);
             }
@@ -77,11 +78,20 @@ namespace Grit.Pattern.Flow
 
         public IList<object> Next(params object[] source)
         {
+            if(source.Length == 0)
+            {
+                return root.Select(x=>x.Key).ToList();
+            }
             return Next(source.AsEnumerable());
         }
 
         public IList<object> Next(IEnumerable<object> source)
         {
+            if (source == null || !source.Any())
+            {
+                return root.Select(x => x.Key).ToList();
+            }
+
             var result = transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
             if (result.Any()) 
             {
