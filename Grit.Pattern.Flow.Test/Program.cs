@@ -34,7 +34,7 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test1();
+            var instance = Test4();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);
@@ -85,6 +85,22 @@ namespace Grit.Pattern.Flow.Test
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B)));
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.B)));
             return instance;
+        }
+
+        private static Instance Test4()
+        {
+            var instance = Builder.Start("Demo", typeof(Steps))
+                .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
+                .When(Steps.Part5, Steps.Part6).Then(Steps.Part8)
+                .When(Steps.Part8).Then(Steps.Part9)
+                .When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
+                .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
+                .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
+                .Complete();
+            
+            var newInstance = Builder.Parser("Demo", typeof(Steps)).Parse(instance.Serialize());
+            Console.WriteLine(newInstance);
+            return newInstance;
         }
     }
 }

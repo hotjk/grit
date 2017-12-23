@@ -26,7 +26,7 @@ namespace Grit.Pattern.Flow
 
         public override string ToString()
         {
-            return string.Format("{0}({1}) -> [{2}]", Key, Weight, string.Join(", ", Target.Select(x => x.Key)));
+            return string.Format("{0} ({1}) -> {2}", Key, Weight, string.Join(", ", Target.Select(x => x.Key)));
         }
 
         public override int GetHashCode()

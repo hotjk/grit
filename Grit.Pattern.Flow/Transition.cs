@@ -34,7 +34,7 @@ namespace Grit.Pattern.Flow
 
         public override string ToString()
         {
-            return string.Format("[{0}] -> [{1}]", string.Join(",", When.OrderBy(x => x).ToArray()), string.Join(",", Then.OrderBy(x => x).ToArray()));
+            return string.Format("{0} -> {1}", string.Join(",", When.OrderBy(x => x).ToArray()), string.Join(",", Then.OrderBy(x => x).ToArray()));
         }
     }
 }

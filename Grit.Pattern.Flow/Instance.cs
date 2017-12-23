@@ -143,5 +143,16 @@ namespace Grit.Pattern.Flow
             }
             return sb.ToString();
         }
+
+        public string Serialize()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var trans in transitions)
+            {
+                sb.AppendLine(trans.ToString());
+            }
+            sb.AppendLine();
+            return sb.ToString();
+        }
     }
 }

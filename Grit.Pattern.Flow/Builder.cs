@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Grit.Pattern.Flow
 {
-    public class Builder : INeedWhen, INeedThen
+    public class Builder : INeedWhen, INeedThen, INeedScript
     {
         private Builder() {}
         private Transition buildTransition;
@@ -13,6 +13,14 @@ namespace Grit.Pattern.Flow
         private Type type;
 
         public static INeedWhen Start(string name, Type type = null)
+        {
+            Builder builder = new Builder();
+            builder.instance = new Instance(name);
+            builder.type = type;
+            return builder;
+        }
+
+        public static INeedScript Parser(string name, Type type)
         {
             Builder builder = new Builder();
             builder.instance = new Instance(name);
@@ -81,6 +89,30 @@ namespace Grit.Pattern.Flow
             instance.AddTransition(buildTransition);
             instance.Completed();
             return instance;
+        }
+
+        private string separator = "->";
+        private char[] stateSepaarator = new char[] { ',', ';', ' ' };
+        private char[] lineSeparator = new char[] { '\r', '\n', ';' };
+
+        public Instance Parse(string script)
+        {
+            if (type == null) throw new ApplicationException("Parsing from script requires state type.");
+            
+            var lines = script.Split(lineSeparator, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                int indexSeparator = line.IndexOf(separator);
+                var left = line.Substring(0, indexSeparator).Trim();
+                var right = line.Substring(indexSeparator + separator.Length).Trim();
+
+                this.When(left.Split(stateSepaarator, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x=>Enum.Parse(type, x)));
+
+                this.Then(right.Split(stateSepaarator, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x=>Enum.Parse(type, x)));
+            }
+            return this.Complete();
         }
     }
 }
