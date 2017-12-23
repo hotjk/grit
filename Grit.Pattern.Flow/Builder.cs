@@ -10,11 +10,13 @@ namespace Grit.Pattern.Flow
         private Builder() {}
         private Transition buildTransition;
         private Instance instance;
+        private Type type;
 
-        public static INeedWhen Start(string name)
+        public static INeedWhen Start(string name, Type type = null)
         {
             Builder builder = new Builder();
             builder.instance = new Instance(name);
+            builder.type = type;
             return builder;
         }
 
@@ -26,8 +28,21 @@ namespace Grit.Pattern.Flow
             }
         }
 
+        private void TypeCheck(IEnumerable<object> states)
+        {
+            if (type == null) return;
+            foreach (var state in states)
+            {
+                if (state.GetType() != type)
+                {
+                    throw new ApplicationException("Invalid state.");
+                }
+            }
+        }
+
         public INeedThen When(IEnumerable<object> states)
         {
+            TypeCheck(states);
             if (buildTransition != null)
             {
                 buildTransition.Assert();
@@ -46,6 +61,7 @@ namespace Grit.Pattern.Flow
 
         public INeedWhen Then(IEnumerable<object> states)
         {
+            TypeCheck(states);
             Append(buildTransition.Then, states);
             return this;
         }
