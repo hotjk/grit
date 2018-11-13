@@ -103,6 +103,10 @@ namespace Grit.Pattern.Flow
             foreach (var line in lines)
             {
                 int indexSeparator = line.IndexOf(separator);
+                if(indexSeparator == -1)
+                {
+                    continue;
+                }
                 var left = line.Substring(0, indexSeparator).Trim();
                 var right = line.Substring(indexSeparator + separator.Length).Trim();
 

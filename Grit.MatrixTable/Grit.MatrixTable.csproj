@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{53BCE614-432C-4759-B895-B5900956FFCF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Grit.MatrixTable</RootNamespace>
+    <AssemblyName>Grit.MatrixTable</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Builder\MatrixBuilder.cs" />
+    <Compile Include="Model\CalculationStatement.cs" />
+    <Compile Include="Model\DummyClause.cs" />
+    <Compile Include="Model\Clause.cs" />
+    <Compile Include="Model\CompositeClause.cs" />
+    <Compile Include="Model\IClause.cs" />
+    <Compile Include="Model\IOp.cs" />
+    <Compile Include="Model\IStatement.cs" />
+    <Compile Include="Model\Node.cs" />
+    <Compile Include="Model\NodeValue.cs" />
+    <Compile Include="Model\Op.cs" />
+    <Compile Include="Parser\BoolClauseParser.cs" />
+    <Compile Include="Parser\ClauseParser.cs" />
+    <Compile Include="Parser\DummyClauseParser.cs" />
+    <Compile Include="Parser\IClauseParser.cs" />
+    <Compile Include="Parser\IParser.cs" />
+    <Compile Include="Parser\Line.cs" />
+    <Compile Include="Model\Matrix.cs" />
+    <Compile Include="Parser\MatrixParser.cs" />
+    <Compile Include="Parser\NumberClauseParser.cs" />
+    <Compile Include="Parser\ParseException.cs" />
+    <Compile Include="Parser\ParserHelper.cs" />
+    <Compile Include="Parser\StringClauseParser.cs" />
+    <Compile Include="Parser\ValueParser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
