@@ -15,7 +15,7 @@ namespace Grit.MatrixTable.Model
         INeedMatrixClauses Then(params INodeValue[] values);
         Matrix End();
     }
-    public class Matrix : CalculationStatement, INeedMatrixClauses, INeedMatrixValues
+    public class Matrix : INeedMatrixClauses, INeedMatrixValues
     {
         public List<Node> Nodes { get; private set; }
         public int NodeClauses { get; private set; }
@@ -55,12 +55,17 @@ namespace Grit.MatrixTable.Model
             return this;
         }
 
-        public override object[] Calc(params object[] values)
+        public object[] Calc(params object[] values)
         {
             if (values.Length != NodeClauses) throw new ApplicationException("The number of parameters does not match the number of columns in the table.");
             var found = Nodes.Find(n => Enumerable.Range(0, NodeClauses).All(i => n.Clauses[i].Match(values[i])));
             if (found != null) return PickValues(found.Values);
             return null;
+        }
+
+        public object[] PickValues(INodeValue[] values)
+        {
+            return values.Select(n => n.GetValue()).ToArray();
         }
     }
 }

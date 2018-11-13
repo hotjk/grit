@@ -38,15 +38,5 @@ namespace Grit.MatrixTable.Model
         {
             return Ops.All(n => n.Match(value));
         }
-
-        public virtual IEnumerable<OpBase> GetOps()
-        {
-            return Ops;
-        }
-
-        public virtual IEnumerable<IClause> GetClauses()
-        {
-            yield return this;
-        }
     }
 }

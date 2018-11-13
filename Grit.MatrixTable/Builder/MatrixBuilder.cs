@@ -15,6 +15,7 @@ namespace Grit.MatrixTable.Builder
         IMatrixNeedAxis Float();
         IMatrixNeedAxis Double();
         IMatrixNeedAxis Decimal();
+        IMatrixNeedAxis Bool();
         IMatrixNeedAxis Column(IClauseParser clauseParser);
         IMatrixNeedValue Then();
     }
@@ -25,6 +26,7 @@ namespace Grit.MatrixTable.Builder
         IMatrixNeedValue Float();
         IMatrixNeedValue Double();
         IMatrixNeedValue Decimal();
+        IMatrixNeedValue Bool();
         IMatrixNeedValue Value(Func<string, object> getValue);
         MatrixParser Parser();
         Matrix Parse(string script);
@@ -64,6 +66,11 @@ namespace Grit.MatrixTable.Builder
             parser.AddParam(ParserHelper.DecimalClause);
             return this;
         }
+        IMatrixNeedAxis IMatrixNeedAxis.Bool()
+        {
+            parser.AddParam(ParserHelper.BoolClause);
+            return this;
+        }
         IMatrixNeedAxis IMatrixNeedAxis.Column(IClauseParser clauseParser)
         {
             parser.AddParam(clauseParser);
@@ -73,43 +80,41 @@ namespace Grit.MatrixTable.Builder
         {
             return this;
         }
-
         IMatrixNeedValue IMatrixNeedValue.String()
         {
             parser.AddValue(ParserHelper.String);
             return this;
         }
-
         IMatrixNeedValue IMatrixNeedValue.Int()
         {
             parser.AddValue(ParserHelper.Int);
             return this;
         }
-
         IMatrixNeedValue IMatrixNeedValue.Float()
         {
             parser.AddValue(ParserHelper.Float);
             return this;
         }
-
         IMatrixNeedValue IMatrixNeedValue.Double()
         {
             parser.AddValue(ParserHelper.Double);
             return this;
         }
-
         IMatrixNeedValue IMatrixNeedValue.Decimal()
         {
             parser.AddValue(ParserHelper.Decimal);
             return this;
         }
-
+        IMatrixNeedValue IMatrixNeedValue.Bool()
+        {
+            parser.AddValue(ParserHelper.Bool);
+            return this;
+        }
         IMatrixNeedValue IMatrixNeedValue.Value(Func<string, object> getValue)
         {
             parser.AddValue(getValue);
             return this;
         }
-
         MatrixParser IMatrixNeedValue.Parser()
         {
             return parser;

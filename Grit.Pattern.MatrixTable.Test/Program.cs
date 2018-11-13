@@ -62,14 +62,16 @@ namespace Grit.Pattern.MatrixTable.Test
 
             public void Matrix2()
             {
-                var result = MatrixBuilder.When().Int().String().Then().Int().Decimal().Parse(
+                var result = MatrixBuilder
+                    .When().Int().String()
+                    .Then().Int().Decimal()
+                    .Parse(
 @"
 (,18],[60,) | 男 | 100, 10.1
 (,18],[60,) | 女 | 120, 8.9
             | 男 | 160, 6.6
             | 女 | 180, 4.2
-"
-                    ).Calc(32, "男");
+").Calc(32, "男");
                 Console.WriteLine("{0} {1}", result[0], result[1]);
             }
         }

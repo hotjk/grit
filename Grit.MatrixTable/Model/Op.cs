@@ -24,12 +24,13 @@ namespace Grit.MatrixTable.Model
         public abstract object GetValue();
     }
 
-    public abstract class Op<T> : OpBase, IOp<T>
+    public abstract class Op<T> //: OpBase
         where T : IEquatable<T>, IComparable<T>
     {
+        public OpType Type { get; protected set; }
         public T Value { get; protected set; }
 
-        public override object GetValue()
+        public object GetValue()
         {
             return Value;
         }

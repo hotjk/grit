@@ -25,16 +25,6 @@ namespace Grit.MatrixTable.Model
             return Clauses.Count == 1 ? Clauses[0] : this;
         }
 
-        public override IEnumerable<IClause> GetClauses()
-        {
-            return Clauses;
-        }
-
-        public override IEnumerable<OpBase> GetOps()
-        {
-            return Clauses.SelectMany(x => x.GetOps());
-        }
-
         public override bool Match(T value)
         {
             if (!Clauses.Any()) return true;

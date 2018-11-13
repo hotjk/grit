@@ -9,7 +9,5 @@ namespace Grit.MatrixTable.Model
     public interface IClause
     {
         bool Match(object value);
-        IEnumerable<IClause> GetClauses();
-        IEnumerable<OpBase> GetOps();
     }
 }

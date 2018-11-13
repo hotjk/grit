@@ -40,13 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\MatrixBuilder.cs" />
-    <Compile Include="Model\CalculationStatement.cs" />
     <Compile Include="Model\DummyClause.cs" />
     <Compile Include="Model\Clause.cs" />
     <Compile Include="Model\CompositeClause.cs" />
     <Compile Include="Model\IClause.cs" />
-    <Compile Include="Model\IOp.cs" />
-    <Compile Include="Model\IStatement.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\NodeValue.cs" />
     <Compile Include="Model\Op.cs" />
