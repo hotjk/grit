@@ -24,11 +24,6 @@ namespace Grit.Pattern.Flow
             Target.Add(node);
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0} ({1}) -> {2}", Key, Weight, string.Join(", ", Target.Select(x => x.Key)));
-        }
-
         public override int GetHashCode()
         {
             return Key.GetHashCode();

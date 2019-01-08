@@ -8,11 +8,11 @@ namespace Grit.Pattern.Flow
 {
     public interface IFlow
     {
-        IList<object> Next(params object[] source);
-        IList<object> Next(IEnumerable<object> source);
-        string Serialize();
-
         ISet<Node> Nodes { get; }
         IList<Transition> Transitions { get; }
+        IList<Node> Root { get; }
+
+        IList<object> Next(params object[] source);
+        IList<object> Next(IEnumerable<object> source);
     }
 }

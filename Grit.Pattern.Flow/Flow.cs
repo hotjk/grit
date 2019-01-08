@@ -8,27 +8,15 @@ namespace Grit.Pattern.Flow
 {
     public class Flow : IFlow
     {
-        internal Flow(string name)
+        internal Flow()
         {
-            Name = name;
             Transitions = new List<Transition>();
             nodes = new Dictionary<object, Node>();
         }
 
-        public string Name { get; private set; }
-
         public IList<Transition> Transitions { get; private set; }
-        public ISet<Node> Nodes { get; private set; }
+        public IList<Node> Root { get; private set; }
         private IDictionary<object, Node> nodes;
-        private IList<Node> root;
-
-        public ISet<Node> Nodes
-        {
-            get
-            {
-                return nodes.Values.ToHashSet();
-            }
-        }
 
         private Node SetNode(object key)
         {
@@ -62,8 +50,8 @@ namespace Grit.Pattern.Flow
 
         internal void Completed()
         {
-            root = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node))).ToList();
-            if (!root.Any())
+            Root = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node))).ToList();
+            if (!Root.Any())
             {
                 throw new ApplicationException("There is not root node in the flow.");
             }
@@ -71,7 +59,7 @@ namespace Grit.Pattern.Flow
             {
                 throw new ApplicationException("There may be cycle in the flow.");
             }
-            foreach (var node in root)
+            foreach (var node in Root)
             {
                 CalculateWeight(node);
             }
@@ -90,11 +78,19 @@ namespace Grit.Pattern.Flow
             }
         }
 
+        public ISet<Node> Nodes
+        {
+            get
+            {
+                return nodes.Values.ToHashSet();
+            }
+        }
+
         public IList<object> Next(params object[] source)
         {
             if(source.Length == 0)
             {
-                return root.Select(x=>x.Key).ToList();
+                return Root.Select(x=>x.Key).ToList();
             }
             return Next(source.AsEnumerable());
         }
@@ -103,7 +99,7 @@ namespace Grit.Pattern.Flow
         {
             if (source == null || !source.Any())
             {
-                return root.Select(x => x.Key).ToList();
+                return Root.Select(x => x.Key).ToList();
             }
 
             var result = Transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
@@ -113,33 +109,6 @@ namespace Grit.Pattern.Flow
                 result = result.Where(x => nodes[x].Weight == max);    
             }
             return result.ToList();
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(Name);
-            foreach (var trans in Transitions)
-            {
-                sb.AppendLine(trans.ToString());
-            }
-            sb.AppendLine();
-            foreach (var node in nodes.Values.OrderBy(x=>x.Weight))
-            {
-                sb.AppendLine(node.ToString());
-            }
-            return sb.ToString();
-        }
-
-        public string Serialize()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var trans in Transitions)
-            {
-                sb.AppendLine(trans.ToString());
-            }
-            sb.AppendLine();
-            return sb.ToString();
         }
     }
 }

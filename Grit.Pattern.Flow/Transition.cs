@@ -31,10 +31,5 @@ namespace Grit.Pattern.Flow
                 throw new ApplicationException("Duplicate Then.");
             }
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0} -> {1}", string.Join(",", When.OrderBy(x => x).ToArray()), string.Join(",", Then.OrderBy(x => x).ToArray()));
-        }
     }
 }

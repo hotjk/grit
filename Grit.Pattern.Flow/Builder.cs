@@ -5,26 +5,21 @@ using System.Text;
 
 namespace Grit.Pattern.Flow
 {
-    public class Builder : INeedWhen, INeedThen, INeedScript
+    public class Builder : INeedWhen, INeedThen
     {
-        private Builder() {}
-        private Transition buildTransition;
+        private Transition building;
         private Flow instance;
         private Type type;
 
-        public static INeedWhen Start(string name, Type type = null)
+        internal Builder(Type type = null)
         {
-            Builder builder = new Builder();
-            builder.instance = new Flow(name);
-            builder.type = type;
-            return builder;
+            this.instance = new Flow();
+            this.type = type;
         }
 
-        public static INeedScript Parser(string name, Type type)
+        public static INeedWhen Start(Type type = null)
         {
-            Builder builder = new Builder();
-            builder.instance = new Flow(name);
-            builder.type = type;
+            Builder builder = new Builder(type);
             return builder;
         }
 
@@ -51,13 +46,13 @@ namespace Grit.Pattern.Flow
         public INeedThen When(IEnumerable<object> states)
         {
             TypeCheck(states);
-            if (buildTransition != null)
+            if (building != null)
             {
-                buildTransition.Assert();
-                instance.AddTransition(buildTransition);
+                building.Assert();
+                instance.AddTransition(building);
             }
-            buildTransition = new Transition();
-            Append(buildTransition.When, states);
+            building = new Transition();
+            Append(building.When, states);
 
             return this;
         }
@@ -70,7 +65,7 @@ namespace Grit.Pattern.Flow
         public INeedWhen Then(IEnumerable<object> states)
         {
             TypeCheck(states);
-            Append(buildTransition.Then, states);
+            Append(building.Then, states);
             return this;
         }
 
@@ -81,42 +76,14 @@ namespace Grit.Pattern.Flow
 
         public IFlow Complete()
         {
-            if (buildTransition == null)
+            if (building == null)
             {
-                throw new ApplicationException("Complete instance without any transition.");
+                throw new ApplicationException("Complete a flow without any transition.");
             }
-            buildTransition.Assert();
-            instance.AddTransition(buildTransition);
+            building.Assert();
+            instance.AddTransition(building);
             instance.Completed();
             return instance;
-        }
-
-        private string separator = "->";
-        private char[] stateSepaarator = new char[] { ',', ';', ' ' };
-        private char[] lineSeparator = new char[] { '\r', '\n', ';' };
-
-        public IFlow Parse(string script)
-        {
-            if (type == null) throw new ApplicationException("Parsing from script requires state type.");
-            
-            var lines = script.Split(lineSeparator, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in lines)
-            {
-                int indexSeparator = line.IndexOf(separator);
-                if(indexSeparator == -1)
-                {
-                    continue;
-                }
-                var left = line.Substring(0, indexSeparator).Trim();
-                var right = line.Substring(indexSeparator + separator.Length).Trim();
-
-                this.When(left.Split(stateSepaarator, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x=>Enum.Parse(type, x)));
-
-                this.Then(right.Split(stateSepaarator, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x=>Enum.Parse(type, x)));
-            }
-            return this.Complete();
         }
     }
 }

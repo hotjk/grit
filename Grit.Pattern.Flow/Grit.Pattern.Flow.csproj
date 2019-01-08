@@ -43,10 +43,10 @@
     <Compile Include="FlowValidator.cs" />
     <Compile Include="IFlow.cs" />
     <Compile Include="INeedThen.cs" />
-    <Compile Include="INeedScript.cs" />
     <Compile Include="INeedWhen.cs" />
     <Compile Include="Flow.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transition.cs" />
   </ItemGroup>
