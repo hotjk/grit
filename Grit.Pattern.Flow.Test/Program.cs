@@ -34,15 +34,15 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test4();
+            var instance = Test5();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);
-            File.WriteAllText(file, html.Replace("<@elements>", instance.CytoscapeJs()));
+            File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
             System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
         }
 
-        private static Instance Test1()
+        private static IFlow Test1()
         {
             var instance = Builder.Start("Demo", typeof(Steps))
                 .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
@@ -58,7 +58,7 @@ namespace Grit.Pattern.Flow.Test
             Console.WriteLine(string.Join(", ", target));
             return instance;
         }
-        private static Instance Test2()
+        private static IFlow Test2()
         {
             var instance = Builder.Start("Demo")
                 .When(Symbol.A).Then(Symbol.B)
@@ -73,7 +73,7 @@ namespace Grit.Pattern.Flow.Test
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B, Symbol.C, Symbol.D)));
             return instance;
         }
-        private static Instance Test3()
+        private static IFlow Test3()
         {
             var instance = Builder.Start("Demo")
                 .When(Symbol.A).Then(Symbol.B)
@@ -87,7 +87,7 @@ namespace Grit.Pattern.Flow.Test
             return instance;
         }
 
-        private static Instance Test4()
+        private static IFlow Test4()
         {
             var instance = Builder.Start("Demo", typeof(Steps))
                 .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
@@ -98,6 +98,23 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
                 .Complete();
             
+            var newInstance = Builder.Parser("Demo", typeof(Steps)).Parse(instance.Serialize());
+            Console.WriteLine(newInstance);
+            return newInstance;
+        }
+
+        private static IFlow Test5()
+        {
+            var instance = Builder.Start("Demo", typeof(Steps))
+                .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
+                .When(Steps.Part5, Steps.Part6).Then(Steps.Part8)
+                .When(Steps.Part8).Then(Steps.Part9)
+                .When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
+                //.When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
+                .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
+                //.When(Steps.Part9).Then(Steps.Part4)
+                .Complete();
+
             var newInstance = Builder.Parser("Demo", typeof(Steps)).Parse(instance.Serialize());
             Console.WriteLine(newInstance);
             return newInstance;

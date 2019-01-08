@@ -9,13 +9,13 @@ namespace Grit.Pattern.Flow
     {
         private Builder() {}
         private Transition buildTransition;
-        private Instance instance;
+        private Flow instance;
         private Type type;
 
         public static INeedWhen Start(string name, Type type = null)
         {
             Builder builder = new Builder();
-            builder.instance = new Instance(name);
+            builder.instance = new Flow(name);
             builder.type = type;
             return builder;
         }
@@ -23,7 +23,7 @@ namespace Grit.Pattern.Flow
         public static INeedScript Parser(string name, Type type)
         {
             Builder builder = new Builder();
-            builder.instance = new Instance(name);
+            builder.instance = new Flow(name);
             builder.type = type;
             return builder;
         }
@@ -79,7 +79,7 @@ namespace Grit.Pattern.Flow
             return this.Then(states.AsEnumerable());
         }
 
-        public Instance Complete()
+        public IFlow Complete()
         {
             if (buildTransition == null)
             {
@@ -95,7 +95,7 @@ namespace Grit.Pattern.Flow
         private char[] stateSepaarator = new char[] { ',', ';', ' ' };
         private char[] lineSeparator = new char[] { '\r', '\n', ';' };
 
-        public Instance Parse(string script)
+        public IFlow Parse(string script)
         {
             if (type == null) throw new ApplicationException("Parsing from script requires state type.");
             

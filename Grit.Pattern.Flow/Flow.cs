@@ -6,19 +6,29 @@ using System.Threading.Tasks;
 
 namespace Grit.Pattern.Flow
 {
-    public class Instance
+    public class Flow : IFlow
     {
-        public Instance(string name)
+        internal Flow(string name)
         {
             Name = name;
-            transitions = new List<Transition>();
+            Transitions = new List<Transition>();
             nodes = new Dictionary<object, Node>();
         }
 
         public string Name { get; private set; }
-        private IList<Transition> transitions;
+
+        public IList<Transition> Transitions { get; private set; }
+        public ISet<Node> Nodes { get; private set; }
         private IDictionary<object, Node> nodes;
         private IList<Node> root;
+
+        public ISet<Node> Nodes
+        {
+            get
+            {
+                return nodes.Values.ToHashSet();
+            }
+        }
 
         private Node SetNode(object key)
         {
@@ -31,9 +41,9 @@ namespace Grit.Pattern.Flow
             return node;
         }
 
-        public void AddTransition(Transition transition)
+        internal void AddTransition(Transition transition)
         {
-            transitions.Add(transition);
+            Transitions.Add(transition);
 
             foreach (var then in transition.Then)
             {
@@ -50,12 +60,16 @@ namespace Grit.Pattern.Flow
             }
         }
 
-        public void Completed()
+        internal void Completed()
         {
             root = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node))).ToList();
             if (!root.Any())
             {
                 throw new ApplicationException("There is not root node in the flow.");
+            }
+            if ((new CycleValidator(this)).HasCycle())
+            {
+                throw new ApplicationException("There may be cycle in the flow.");
             }
             foreach (var node in root)
             {
@@ -70,7 +84,7 @@ namespace Grit.Pattern.Flow
                 next.Weight = next.Weight + node.Weight + 1;
                 if (next.Weight > 100000)
                 {
-                    throw new ApplicationException("There may be loops in the flow.");
+                    throw new ApplicationException("The flow is too big.");
                 }
                 CalculateWeight(next);
             }
@@ -92,7 +106,7 @@ namespace Grit.Pattern.Flow
                 return root.Select(x => x.Key).ToList();
             }
 
-            var result = transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
+            var result = Transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
             if (result.Any()) 
             {
                 int max = result.Max(x => nodes[x].Weight);
@@ -101,38 +115,11 @@ namespace Grit.Pattern.Flow
             return result.ToList();
         }
 
-        public string CytoscapeJs()
-        {
-            Random random = new Random();
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("elements: {");
-            sb.AppendLine("nodes: [");
-            sb.AppendLine(string.Join(",", nodes.Select(x => string.Format("{{ data: {{ id: '{0}' }} }}", x.Key))));
-            sb.AppendLine("],");
-            sb.AppendLine("edges: [");
-            sb.AppendLine(string.Join(",", transitions.Select(x =>
-            {
-                StringBuilder buffer = new StringBuilder();
-                foreach (var then in x.Then)
-                {
-                    var color = random.Next(0x1000000);
-                    foreach (var when in x.When)
-                    {
-                        buffer.AppendFormat("{{ data: {{ source: '{0}', target: '{1}', faveColor: '{2}' }} }},", when, then, String.Format("#{0:X6}", color));
-                    }
-                }
-                return buffer.ToString();
-            })));
-            sb.AppendLine("]");
-            sb.AppendLine("}");
-            return sb.ToString();
-        }
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Name);
-            foreach (var trans in transitions)
+            foreach (var trans in Transitions)
             {
                 sb.AppendLine(trans.ToString());
             }
@@ -147,7 +134,7 @@ namespace Grit.Pattern.Flow
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var trans in transitions)
+            foreach (var trans in Transitions)
             {
                 sb.AppendLine(trans.ToString());
             }

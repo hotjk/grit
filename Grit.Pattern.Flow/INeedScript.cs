@@ -8,6 +8,6 @@ namespace Grit.Pattern.Flow
 {
     public interface INeedScript
     {
-        Instance Parse(string script);
+        IFlow Parse(string script);
     }
 }

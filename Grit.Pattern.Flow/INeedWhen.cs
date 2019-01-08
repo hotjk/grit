@@ -10,6 +10,6 @@ namespace Grit.Pattern.Flow
     {
         INeedThen When(IEnumerable<object> states);
         INeedThen When(params object[] states);
-        Instance Complete();
+        IFlow Complete();
     }
 }
