@@ -34,12 +34,17 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test5();
+            var instance = Test4();
 
-            string file = "./Web/code.js";
+            //string file = "./Web/code.js";
+            //string html = File.ReadAllText(file);
+            //File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
+            //System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
+
+            string file = "./Web/code2.js";
             string html = File.ReadAllText(file);
             File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
-            System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
+            System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo2.html"));
         }
 
         private static IFlow Test1()
@@ -113,7 +118,7 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
                 .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
                 .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
-                //.When(Steps.Part9).Then(Steps.Part4)
+                .When(Steps.Part9).Then(Steps.Part4)
                 .Complete();
             Console.WriteLine(Parser.Debug(instance));
 

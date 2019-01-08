@@ -14,22 +14,27 @@ namespace Grit.Pattern.Flow
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("elements: {");
             sb.AppendLine("nodes: [");
-            sb.AppendLine(string.Join(",", flow.Nodes.Select(x => string.Format("{{ data: {{ id: '{0}' }} }}", x.Key))));
+            foreach(var node in flow.Nodes)
+            {
+                sb.AppendFormat("{{ data: {{ id: '{0}' }} }}, ", node.Key);
+                sb.AppendLine();
+            }
             sb.AppendLine("],");
             sb.AppendLine("edges: [");
-            sb.AppendLine(string.Join(",", flow.Transitions.Select(x =>
+
+            foreach(var trans in flow.Transitions)
             {
-                StringBuilder buffer = new StringBuilder();
-                foreach (var then in x.Then)
+                foreach (var then in trans.Then)
                 {
                     var color = random.Next(0x1000000);
-                    foreach (var when in x.When)
+                    foreach (var when in trans.When)
                     {
-                        buffer.AppendFormat("{{ data: {{ source: '{0}', target: '{1}', faveColor: '{2}' }} }},", when, then, String.Format("#{0:X6}", color));
+                        sb.AppendFormat("{{ data: {{ source: '{0}', target: '{1}', faveColor: '{2}' }} }},", when, then, String.Format("#{0:X6}", color));
+                        sb.AppendLine();
                     }
                 }
-                return buffer.ToString();
-            })));
+            }
+            
             sb.AppendLine("]");
             sb.AppendLine("}");
             return sb.ToString();
