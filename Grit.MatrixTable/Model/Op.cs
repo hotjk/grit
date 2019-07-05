@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Grit.MatrixTable.Model
 {
@@ -15,7 +16,8 @@ namespace Grit.MatrixTable.Model
         LT,
         Contains,
         StartWith,
-        EndWith
+        EndWith,
+        RegexMatch
     }
 
     public abstract class OpBase
@@ -76,7 +78,21 @@ namespace Grit.MatrixTable.Model
 
     public class Op4String : Op<string>
     {
-        public Op4String(OpType type, string value) : base(type, value) { }
+        private static IDictionary<string, Regex> regexDict = null;
+        public Op4String(OpType type, string value) : base(type, value)
+        {
+            if(type == OpType.RegexMatch)
+            {
+                if(regexDict == null)
+                {
+                     regexDict = new Dictionary<string, Regex>();
+                }
+                if (!regexDict.ContainsKey(value))
+                {
+                    regexDict[value] = new Regex(value);
+                }
+            }
+        }
 
         public override bool Match(string other)
         {
@@ -91,6 +107,8 @@ namespace Grit.MatrixTable.Model
                     return other.StartsWith(v);
                 case OpType.EndWith:
                     return other.EndsWith(v);
+                case OpType.RegexMatch:
+                    return regexDict[v].IsMatch(other);
             }
             throw new ApplicationException("Invalid operator type.");
         }

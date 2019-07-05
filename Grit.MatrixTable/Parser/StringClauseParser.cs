@@ -37,6 +37,11 @@ namespace Grit.MatrixTable.Parser
             {
                 string left = values.First();
                 if (left == ParserHelper.CLAUSE_ANY) { }
+                else if(left[0] == ParserHelper.CLAUSE_REGEX)
+                {
+                    left = left.Substring(1);
+                    clauses.AddClause(clause.Op(ParseOp(OpType.RegexMatch, left)));
+                }
                 else if (left[0] == ParserHelper.CLAUSE_LIKE)
                 {
                     left = left.Substring(1);

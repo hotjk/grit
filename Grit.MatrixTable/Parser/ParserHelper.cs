@@ -54,6 +54,7 @@ namespace Grit.MatrixTable.Parser
         public readonly static string CLAUSE_SEP_STR = string.Format("{0} ", CLAUSE_SEP_CHA);
         public readonly static string CLAUSE_ANY = "*";
         public readonly static char CLAUSE_LIKE = '%';
+        public readonly static char CLAUSE_REGEX = '~';
 
         public readonly static string CSS_PARAMETER = "yep-parameter";
         public readonly static string CSS_RETURN_VALUE = "yep-returnvalue";

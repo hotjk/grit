@@ -71,7 +71,9 @@ namespace Grit.Pattern.MatrixTable.Test
 (,18],[60,) | 女 | 120, 8.9
             | 男 | 160, 6.6
             | 女 | 180, 4.2
-").Calc(32, "男");
+      (,60) | ~.*null.* | 200, 5.3
+            | ~.*null.* | 100, 12.1
+").Calc(32, "maybe null value");
                 Console.WriteLine("{0} {1}", result[0], result[1]);
             }
         }

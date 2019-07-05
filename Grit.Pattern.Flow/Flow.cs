@@ -82,7 +82,8 @@ namespace Grit.Pattern.Flow
         {
             get
             {
-                return nodes.Values.ToHashSet();
+                return new HashSet<Node>(nodes.Values);
+                //return nodes.Values.ToHashSet();
             }
         }
 
