@@ -10,106 +10,56 @@ namespace Grit.Pattern.Flow
     {
         internal Flow()
         {
-            Transitions = new List<Transition>();
-            nodes = new Dictionary<object, Node>();
+            Paths = new List<Tuple<object, object>>();
         }
 
-        public IList<Transition> Transitions { get; private set; }
-        public IList<Node> Root { get; private set; }
-        private IDictionary<object, Node> nodes;
+        public List<Tuple<object, object>> Paths { get; private set; }
 
-        private Node SetNode(object key)
+        internal void AddTransition(Tuple<HashSet<object>, HashSet<object>> transition)
         {
-            Node node = null;
-            if(!nodes.TryGetValue(key, out node))
+            foreach (var when in transition.Item1)
             {
-                node = new Node(key);
-                nodes[key] = node;
-            }
-            return node;
-        }
-
-        internal void AddTransition(Transition transition)
-        {
-            Transitions.Add(transition);
-
-            foreach (var then in transition.Then)
-            {
-                SetNode(then);
-            }
-
-            foreach (var when in transition.When)
-            {
-                var nodeWhen = SetNode(when);
-                foreach (var then in transition.Then)
+                foreach(var then in transition.Item2)
                 {
-                    nodeWhen.TryAdd(SetNode(then));
+                    Paths.Add(new Tuple<object, object>(when, then));
                 }
-            }
-        }
-
-        internal void Completed()
-        {
-            Root = nodes.Values.Where(node => !nodes.Any(x => x.Value.Target.Contains(node))).ToList();
-            if (!Root.Any())
-            {
-                throw new ApplicationException("There is not root node in the flow.");
-            }
-            if ((new CycleValidator(this)).HasCycle())
-            {
-                throw new ApplicationException("There may be cycle in the flow.");
-            }
-            foreach (var node in Root)
-            {
-                CalculateWeight(node);
-            }
-        }
-
-        private void CalculateWeight(Node node)
-        {
-            foreach (var next in node.Target)
-            {
-                next.Weight = next.Weight + node.Weight + 1;
-                if (next.Weight > 100000)
-                {
-                    throw new ApplicationException("The flow is too big.");
-                }
-                CalculateWeight(next);
-            }
-        }
-
-        public ISet<Node> Nodes
-        {
-            get
-            {
-                return new HashSet<Node>(nodes.Values);
-                //return nodes.Values.ToHashSet();
             }
         }
 
         public IList<object> Next(params object[] source)
         {
-            if(source.Length == 0)
-            {
-                return Root.Select(x=>x.Key).ToList();
-            }
             return Next(source.AsEnumerable());
         }
 
-        public IList<object> Next(IEnumerable<object> source)
+        private IList<object> Next(IEnumerable<object> source)
         {
-            if (source == null || !source.Any())
-            {
-                return Root.Select(x => x.Key).ToList();
-            }
+            var nodes = Enumerable.Except(Nodes(), source).ToList();
+            return nodes.Where(then => When(then).All(x => source.Contains(x))).ToList();
+        }
 
-            var result = Transitions.Where(t => t.When.All(x => source.Any(n => n.Equals(x)))).SelectMany(t => t.Then).Distinct();
-            if (result.Any()) 
-            {
-                int max = result.Max(x => nodes[x].Weight);
-                result = result.Where(x => nodes[x].Weight == max);    
-            }
-            return result.ToList();
+        public IEnumerable<object> Nodes()
+        {
+            return Paths.Select(x => x.Item1).Union(Paths.Select(x => x.Item2).Distinct());
+        }
+
+        public IEnumerable<object> Whens()
+        {
+            return Paths.Select(x => x.Item1).Distinct();
+        }
+
+        public IEnumerable<object> Thens()
+        {
+            return Paths.Select(x => x.Item2).Distinct();
+        }
+
+        public IEnumerable<object> When(object then)
+        {
+            return Paths.Where(x => x.Item2.Equals(then)).Select(x => x.Item1).Distinct();
+        }
+
+        public IEnumerable<object> Then(object when)
+        {
+            return Paths.Where(x => x.Item1.Equals(when)).Select(x => x.Item2).Distinct();
         }
     }
 }

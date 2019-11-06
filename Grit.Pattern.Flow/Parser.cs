@@ -45,22 +45,9 @@ namespace Grit.Pattern.Flow
         public static string Serialize(IFlow flow)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var trans in flow.Transitions)
+            foreach (var node in flow.Paths)
             {
-                sb.AppendFormat("{0} {2} {1}", string.Join(",", trans.When.OrderBy(x => x).ToArray()), string.Join(",", trans.Then.OrderBy(x => x).ToArray()), separator);
-                sb.AppendLine();
-            }
-            sb.AppendLine();
-            return sb.ToString();
-        }
-
-        public static string Debug(IFlow flow)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Serialize(flow));
-            foreach (var node in flow.Nodes.OrderBy(x => x.Weight))
-            {
-                sb.AppendFormat("{0} ({1}) -> {2}", node.Key, node.Weight, string.Join(", ", node.Target.Select(x => x.Key)));
+                sb.AppendFormat("{0} -> {1}", node.Item1, node.Item2);
                 sb.AppendLine();
             }
             return sb.ToString();

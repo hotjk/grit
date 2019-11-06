@@ -34,19 +34,50 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test4();
+            var instance = Test1();
 
-            //string file = "./Web/code.js";
-            //string html = File.ReadAllText(file);
-            //File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
-            //System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
-
-            string file = "./Web/code2.js";
+            string file = "./Web/code.js";
             string html = File.ReadAllText(file);
             File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
-            System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo2.html"));
-        }
+            System.Diagnostics.Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Web/demo.html"));
 
+            //string file = "./Web/code2.js";
+            //string html = File.ReadAllText(file);
+            //File.WriteAllText(file, html.Replace("<@elements>", CytoscapeJs.JS(instance)));
+            //System.Diagnostics.Process.Start(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Web/demo2.html"));
+        }
+        private static IFlow Test()
+        {
+            var instance = Builder.Start(typeof(Steps))
+                .When(Steps.Part1).Then(Steps.Part2, Steps.Part4)
+                .When(Steps.Part2).Then(Steps.Part3)
+                .When(Steps.Part3, Steps.Part5).Then(Steps.Part4)
+                .When(Steps.Part4).Then(Steps.Part6)
+                .Complete();
+            Console.WriteLine(Parser.Serialize(instance));
+
+            var target = instance.Next();
+            Console.WriteLine(string.Join(", ", target)); // 1 5
+
+            target = instance.Next(Steps.Part1);
+            Console.WriteLine(string.Join(", ", target)); // 2 5
+
+            target = instance.Next(Steps.Part1,Steps.Part2);
+            Console.WriteLine(string.Join(", ", target)); // 3 5
+
+            target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3);
+            Console.WriteLine(string.Join(", ", target)); // 5
+
+            target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3, Steps.Part5);
+            Console.WriteLine(string.Join(", ", target)); // 4
+
+            target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3, Steps.Part4, Steps.Part5);
+            Console.WriteLine(string.Join(", ", target)); // 6
+
+            target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3, Steps.Part4, Steps.Part5, Steps.Part6);
+            Console.WriteLine(string.Join(", ", target)); // 
+            return instance;
+        }
         private static IFlow Test1()
         {
             var instance = Builder.Start(typeof(Steps))
@@ -57,10 +88,10 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
                 .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
                 .Complete();
-            Console.WriteLine(Parser.Debug(instance));
+            Console.WriteLine(Parser.Serialize(instance));
 
             var target = instance.Next(Steps.Part1, Steps.Part2, Steps.Part3, Steps.Part4, Steps.Part6, Steps.Part7);
-            Console.WriteLine(string.Join(", ", target));
+            Console.WriteLine(string.Join(", ", target)); // Part5
             return instance;
         }
         private static IFlow Test2()
@@ -71,7 +102,7 @@ namespace Grit.Pattern.Flow.Test
                 .When(Symbol.A, Symbol.B, Symbol.C).Then(Symbol.D)
                 .When(Symbol.B, Symbol.C, Symbol.D).Then(Symbol.E, Symbol.F)
                 .Complete();
-            Console.WriteLine(Parser.Debug(instance));
+            Console.WriteLine(Parser.Serialize(instance));
 
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A)));
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B, Symbol.C)));
@@ -84,7 +115,7 @@ namespace Grit.Pattern.Flow.Test
                 .When(Symbol.A).Then(Symbol.B)
                 .When(Symbol.A, Symbol.B).Then(Symbol.C)
                 .Complete();
-            Console.WriteLine(Parser.Debug(instance));
+            Console.WriteLine(Parser.Serialize(instance));
 
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A)));
             Console.WriteLine(string.Join(", ", instance.Next(Symbol.A, Symbol.B)));
@@ -102,10 +133,10 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
                 .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
                 .Complete();
-            Console.WriteLine(Parser.Debug(instance));
+            Console.WriteLine(Parser.Serialize(instance));
 
             var newInstance = (new Parser(typeof(Steps))).Parse(Parser.Serialize(instance));
-            Console.WriteLine(Parser.Debug(newInstance));
+            Console.WriteLine(Parser.Serialize(newInstance));
             return newInstance;
         }
 
@@ -119,11 +150,14 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
                 .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
                 .When(Steps.Part9).Then(Steps.Part4)
+                .When(Steps.Part9).Then(Steps.Part1)
                 .Complete();
-            Console.WriteLine(Parser.Debug(instance));
+            Console.WriteLine(Parser.Serialize(instance));
 
             var newInstance = (new Parser(typeof(Steps))).Parse(Parser.Serialize(instance));
-            Console.WriteLine(Parser.Debug(newInstance));
+            Console.WriteLine(Parser.Serialize(newInstance));
+
+            Console.WriteLine("Cycle? {0}", new CycleValidator(newInstance).HasCycle());
             return newInstance;
         }
     }

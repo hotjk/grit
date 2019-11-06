@@ -7,9 +7,9 @@ namespace Grit.Pattern.Flow
 {
     public class Builder : INeedWhen, INeedThen
     {
-        private Transition building;
-        private Flow instance;
-        private Type type;
+        private Tuple<HashSet<object>, HashSet<object>> building;
+        private readonly Flow instance;
+        private readonly Type type;
 
         internal Builder(Type type = null)
         {
@@ -21,14 +21,6 @@ namespace Grit.Pattern.Flow
         {
             Builder builder = new Builder(type);
             return builder;
-        }
-
-        private void Append(IList<object> source, IEnumerable<object> states)
-        {
-            foreach (var state in states)
-            {
-                source.Add(state);
-            }
         }
 
         private void TypeCheck(IEnumerable<object> states)
@@ -48,12 +40,10 @@ namespace Grit.Pattern.Flow
             TypeCheck(states);
             if (building != null)
             {
-                building.Assert();
                 instance.AddTransition(building);
             }
-            building = new Transition();
-            Append(building.When, states);
-
+            building = new Tuple<HashSet<object>, HashSet<object>>(new HashSet<object>(), new HashSet<object>());
+            building.Item1.UnionWith(states);
             return this;
         }
 
@@ -65,7 +55,7 @@ namespace Grit.Pattern.Flow
         public INeedWhen Then(IEnumerable<object> states)
         {
             TypeCheck(states);
-            Append(building.Then, states);
+            building.Item2.UnionWith(states);
             return this;
         }
 
@@ -76,13 +66,10 @@ namespace Grit.Pattern.Flow
 
         public IFlow Complete()
         {
-            if (building == null)
+            if (building != null)
             {
-                throw new ApplicationException("Complete a flow without any transition.");
+                instance.AddTransition(building);
             }
-            building.Assert();
-            instance.AddTransition(building);
-            instance.Completed();
             return instance;
         }
     }

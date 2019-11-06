@@ -8,21 +8,21 @@ namespace Grit.Pattern.Flow
 {
     public class CycleValidator
     {
-        private Flow flow;
-        private ISet<Node> whiteSet;
-        private ISet<Node> graySet;
-        private ISet<Node> blackSet;
+        private readonly IFlow flow;
+        private ISet<object> whiteSet;
+        private ISet<object> graySet;
+        private ISet<object> blackSet;
 
-        public CycleValidator(Flow flow)
+        public CycleValidator(IFlow flow)
         {
             this.flow = flow;
         }
 
         public bool HasCycle()
         {
-            whiteSet = flow.Nodes;
-            graySet = new HashSet<Node>();
-            blackSet = new HashSet<Node>();
+            whiteSet = new HashSet<object>(flow.Nodes());
+            graySet = new HashSet<object>();
+            blackSet = new HashSet<object>();
 
             while (whiteSet.Count > 0)
             {
@@ -32,10 +32,10 @@ namespace Grit.Pattern.Flow
             return false;
         }
 
-        private bool Dfs(Node node)
+        private bool Dfs(object node)
         {
             MoveNode(node, whiteSet, graySet);
-            foreach (var neighbor in node.Target)
+            foreach (var neighbor in flow.Then(node))
             {
                 if (blackSet.Contains(neighbor)) { continue; }
                 if (graySet.Contains(neighbor)) { return true; }
@@ -45,7 +45,7 @@ namespace Grit.Pattern.Flow
             return false;
         }
 
-        private void MoveNode(Node node, ISet<Node> source, ISet<Node> target)
+        private void MoveNode(object node, ISet<object> source, ISet<object> target)
         {
             source.Remove(node);
             target.Add(node);
