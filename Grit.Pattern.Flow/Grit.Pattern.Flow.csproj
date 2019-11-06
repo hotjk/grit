@@ -45,10 +45,8 @@
     <Compile Include="INeedThen.cs" />
     <Compile Include="INeedWhen.cs" />
     <Compile Include="Flow.cs" />
-    <Compile Include="Node.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
