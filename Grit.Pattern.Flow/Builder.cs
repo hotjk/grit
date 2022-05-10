@@ -38,10 +38,6 @@ namespace Grit.Pattern.Flow
         public INeedThen When(IEnumerable<object> states)
         {
             TypeCheck(states);
-            if (building != null)
-            {
-                instance.AddTransition(building);
-            }
             building = new Tuple<HashSet<object>, HashSet<object>>(new HashSet<object>(), new HashSet<object>());
             building.Item1.UnionWith(states);
             return this;
@@ -56,6 +52,7 @@ namespace Grit.Pattern.Flow
         {
             TypeCheck(states);
             building.Item2.UnionWith(states);
+            instance.AddTransition(building);
             return this;
         }
 
@@ -66,10 +63,6 @@ namespace Grit.Pattern.Flow
 
         public IFlow Complete()
         {
-            if (building != null)
-            {
-                instance.AddTransition(building);
-            }
             return instance;
         }
     }

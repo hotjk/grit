@@ -42,12 +42,12 @@ namespace Grit.Pattern.Flow
             return Paths.Select(x => x.Item1).Union(Paths.Select(x => x.Item2).Distinct());
         }
 
-        public IEnumerable<object> Whens()
+        public IEnumerable<object> When()
         {
             return Paths.Select(x => x.Item1).Distinct();
         }
 
-        public IEnumerable<object> Thens()
+        public IEnumerable<object> Then()
         {
             return Paths.Select(x => x.Item2).Distinct();
         }

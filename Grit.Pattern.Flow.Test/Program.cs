@@ -34,7 +34,7 @@ namespace Grit.Pattern.Flow.Test
         }
         static void Main(string[] args)
         {
-            var instance = Test1();
+            var instance = Test();
 
             string file = "./Web/code.js";
             string html = File.ReadAllText(file);
@@ -84,9 +84,9 @@ namespace Grit.Pattern.Flow.Test
                 .When(Steps.Part1).Then(Steps.Part2, Steps.Part3, Steps.Part4)
                 .When(Steps.Part5, Steps.Part6).Then(Steps.Part8)
                 .When(Steps.Part8).Then(Steps.Part9)
-                .When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
+                //.When(Steps.Part6, Steps.Part7).Then(Steps.Part8)
                 .When(Steps.Part2, Steps.Part3, Steps.Part4).Then(Steps.Part5, Steps.Part6, Steps.Part7)
-                .When(Steps.Part5, Steps.Part7).Then(Steps.Part8)
+                .When(Steps.Part6, Steps.Part7).Then(Steps.Part9)
                 .Complete();
             Console.WriteLine(Parser.Serialize(instance));
 

@@ -22,7 +22,7 @@ namespace Grit.Pattern.Flow
             sb.AppendLine("],");
             sb.AppendLine("edges: [");
 
-            foreach(var then in flow.Thens())
+            foreach(var then in flow.Then())
             {
                 var color = random.Next(0x1000000);
                 foreach (var when in flow.When(then))
