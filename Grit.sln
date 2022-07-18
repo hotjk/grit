@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{9EA42C80-014F-4D5C-99C5-03D923A7BEF8}"
 EndProject
@@ -56,6 +56,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grit.MatrixTable", "Grit.MatrixTable\Grit.MatrixTable.csproj", "{53BCE614-432C-4759-B895-B5900956FFCF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grit.Pattern.MatrixTable.Test", "Grit.Pattern.MatrixTable.Test\Grit.Pattern.MatrixTable.Test.csproj", "{93C9C891-BF3C-4E07-A5C9-366E6656642D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Algorithm", "Algorithm", "{7BEA6A9B-3D64-4CF3-9D33-B53B27BF0DF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grit.Algorithm", "Grit.Algorithm\Grit.Algorithm.csproj", "{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grit.Algorithm.Test", "Grit.Algorithm.Test\Grit.Algorithm.Test.csproj", "{8CF57158-D886-41FC-946B-1363F6A7116C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +145,14 @@ Global
 		{93C9C891-BF3C-4E07-A5C9-366E6656642D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93C9C891-BF3C-4E07-A5C9-366E6656642D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93C9C891-BF3C-4E07-A5C9-366E6656642D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF57158-D886-41FC-946B-1363F6A7116C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF57158-D886-41FC-946B-1363F6A7116C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF57158-D886-41FC-946B-1363F6A7116C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF57158-D886-41FC-946B-1363F6A7116C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,5 +178,10 @@ Global
 		{65D0266F-1ECC-4A37-9DB1-B8CB9A1EC299} = {71E85344-A3BE-4243-AA13-ADCC8152B9E1}
 		{53BCE614-432C-4759-B895-B5900956FFCF} = {36C74093-3A0E-4360-98CE-DA73D733565F}
 		{93C9C891-BF3C-4E07-A5C9-366E6656642D} = {71E85344-A3BE-4243-AA13-ADCC8152B9E1}
+		{C796B5B0-BCD6-4E9F-8189-F59FF3A5CD86} = {7BEA6A9B-3D64-4CF3-9D33-B53B27BF0DF0}
+		{8CF57158-D886-41FC-946B-1363F6A7116C} = {71E85344-A3BE-4243-AA13-ADCC8152B9E1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E62D3FB6-1C2B-4601-8B72-1C5D2F6C353A}
 	EndGlobalSection
 EndGlobal
